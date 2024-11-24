@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Customer Details</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter Customer Details</h1>
+        <form method="POST">
+            <input type="text" name="description" placeholder="Description" required>
+            <input type="text" name="house_number" placeholder="House Number" required>
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="plot_number" placeholder="Plot Number" required>
+            <input type="text" name="meter_number" placeholder="Meter Number" required>
+            <input type="date" name="entry_date" placeholder="Entry Date" required>
+            <input type="text" name="maintainance" placeholder="Maintainance" required>
+            <input type="text" name="service_charge" placeholder="Service Charge" required>
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Customer Information</h2>
+        <table>
+            <tr>
+                <th>Description</th>
+                <th>House Number</th>
+                <th>Name</th>
+                <th>Plot Number</th>
+                <th>Meter Number</th>
+                <th>Entry Date</th>
+                <th>Maintainance</th>
+                <th>Service Charge</th>
+                <th>Actions</th>
+            </tr>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.description }}</td>
+                <td>{{ customer.house_number }}</td>
+                <td>{{ customer.name }}</td>
+                <td>{{ customer.plot_number }}</td>
+                <td>{{ customer.meter_number }}</td>
+                <td>{{ customer.entry_date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ customer.maintainance }}</td>
+                <td>{{ customer.service_charge }}</td>
+                <td>
+                    <form method="POST" action="/delete">
+                        <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <footer>
+        <p>&copy; 2024 Car Selling Company</p>
+    </footer>
+</body>
+</html>
