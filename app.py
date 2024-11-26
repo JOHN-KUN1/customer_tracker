@@ -1,8 +1,10 @@
+import multiprocessing.process
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from datetime import datetime, timedelta
 import threading
+import multiprocessing
 
 app = Flask(__name__)
 
@@ -65,7 +67,7 @@ def delete_customer():
     return redirect(url_for('index'))
 
 def send_rent_due_email(customer):
-    msg = Message('Rent Due Reminder', sender='kun405222@gmail.com', recipients=['bobbyewemade@gmail.com'])
+    msg = Message('Rent Due Reminder', sender='kun405222@gmail.com', recipients=['elitejhn5@gmail.com'])
     msg.body = f"Rent for {customer.name} is due."
     mail.send(msg)
 
@@ -80,9 +82,9 @@ def rent_due_checker():
                     print("sent")
                     db.session.delete(customer)
                     db.session.commit()
-            threading.Event().wait(60)  # Check once every minute
+            multiprocessing.Event().wait(60)  # Check once every minute
 
 
 if __name__ == '__main__':
-    threading.Thread(target=rent_due_checker).start()
+    multiprocessing.Process(target=rent_due_checker).start()
     app.run(debug=True)
