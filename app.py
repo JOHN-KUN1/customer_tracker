@@ -25,37 +25,41 @@ mail = Mail(app)
 
 # Define Customer Model
 class Customer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(200), nullable=False)
-    house_number = db.Column(db.String(50), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    plot_number = db.Column(db.String(50), nullable=False)
-    meter_number = db.Column(db.String(50), nullable=False)
-    entry_date = db.Column(db.DateTime, nullable=False)
-    maintainance = db.Column(db.String(200), nullable=False)
-    service_charge = db.Column(db.String(200), nullable=False)
+    id = db.Column(db.Integer, primary_key=True) 
+    date_due = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.String(200), nullable=False) 
+    house_number = db.Column(db.String(50), nullable=False) 
+    name = db.Column(db.String(100), nullable=False) 
+    plot_number = db.Column(db.String(50), nullable=False) 
+    phone_number = db.Column(db.String(50), nullable=False) 
+    meter_number = db.Column(db.String(50), nullable=False) 
+    maintainance = db.Column(db.String(200), nullable=False) 
+    service_charge = db.Column(db.String(200), nullable=False) 
+    form_of_identification = db.Column(db.String(200), nullable=False) 
+    occupation = db.Column(db.String(100), nullable=False)
  
 with app.app_context():
     db.create_all()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        customer = Customer(
-            description=request.form['description'],
-            house_number=request.form['house_number'],
-            name=request.form['name'],
-            plot_number=request.form['plot_number'],
-            meter_number=request.form['meter_number'],
-            entry_date=datetime.strptime(request.form['entry_date'], '%Y-%m-%d'),
-            maintainance=request.form['maintainance'],
-            service_charge=request.form['service_charge']
-        )
-        db.session.add(customer)
-        db.session.commit()
+    if request.method == 'POST': 
+        customer = Customer( 
+            date_due=datetime.strptime(request.form['date_due'], '%Y-%m-%d'), 
+            description=request.form['description'], 
+            house_number=request.form['house_number'], 
+            name=request.form['name'], 
+            plot_number=request.form['plot_number'], 
+            phone_number=request.form['phone_number'], 
+            meter_number=request.form['meter_number'], 
+            maintainance=request.form['maintainance'], 
+            service_charge=request.form['service_charge'], 
+            form_of_identification=request.form['form_of_identification'], 
+            occupation=request.form['occupation']) 
+        db.session.add(customer) 
+        db.session.commit() 
         return redirect(url_for('index'))
-
-    customers = Customer.query.all()
+    customers = Customer.query.all() 
     return render_template('index.html', customers=customers)
 
 @app.route('/delete', methods=['POST'])

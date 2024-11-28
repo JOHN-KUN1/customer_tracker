@@ -3,59 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Customer Details</title>
+    <title>Customer Management</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card-header {
+            background-color: #343a40;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .table {
+            background-color: white;
+        }
+        .table thead th {
+            background-color: #343a40;
+            color: white;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Enter Customer Details</h1>
-        <form method="POST">
-            <input type="text" name="description" placeholder="Description" required>
-            <input type="text" name="house_number" placeholder="House Number" required>
-            <input type="text" name="name" placeholder="Name" required>
-            <input type="text" name="plot_number" placeholder="Plot Number" required>
-            <input type="text" name="meter_number" placeholder="Meter Number" required>
-            <input type="date" name="entry_date" placeholder="Entry Date" required>
-            <input type="text" name="maintainance" placeholder="Maintainance" required>
-            <input type="text" name="service_charge" placeholder="Service Charge" required>
-            <button type="submit">Submit</button>
-        </form>
 
-        <h2>Customer Information</h2>
-        <table>
-            <tr>
-                <th>Description</th>
-                <th>House Number</th>
-                <th>Name</th>
-                <th>Plot Number</th>
-                <th>Meter Number</th>
-                <th>Entry Date</th>
-                <th>Maintainance</th>
-                <th>Service Charge</th>
-                <th>Actions</th>
-            </tr>
-            {% for customer in customers %}
-            <tr>
-                <td>{{ customer.description }}</td>
-                <td>{{ customer.house_number }}</td>
-                <td>{{ customer.name }}</td>
-                <td>{{ customer.plot_number }}</td>
-                <td>{{ customer.meter_number }}</td>
-                <td>{{ customer.entry_date.strftime('%Y-%m-%d') }}</td>
-                <td>{{ customer.maintainance }}</td>
-                <td>{{ customer.service_charge }}</td>
-                <td>
-                    <form method="POST" action="/delete">
-                        <input type="hidden" name="customer_id" value="{{ customer.id }}">
-                        <button type="submit" class="delete-button">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-header text-center">
+            <h3>Customer Management</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="/">
+                <div class="form-group">
+                    <label for="date_due">Date Due</label>
+                    <input type="date" class="form-control" id="date_due" name="date_due" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" required>
+                </div>
+                <div class="form-group">
+                    <label for="house_number">House Number</label>
+                    <input type="text" class="form-control" id="house_number" name="house_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="plot_number">Plot Number</label>
+                    <input type="text" class="form-control" id="plot_number" name="plot_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="meter_number">Meter Number</label>
+                    <input type="text" class="form-control" id="meter_number" name="meter_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="maintainance">Maintenance</label>
+                    <input type="text" class="form-control" id="maintainance" name="maintainance" required>
+                </div>
+                <div class="form-group">
+                    <label for="service_charge">Service Charge</label>
+                    <input type="text" class="form-control" id="service_charge" name="service_charge" required>
+                </div>
+                <div class="form-group">
+                    <label for="form_of_identification">Form of Identification</label>
+                    <input type="text" class="form-control" id="form_of_identification" name="form_of_identification" required>
+                </div>
+                <div class="form-group">
+                    <label for="occupation">Occupation</label>
+                    <input type="text" class="form-control" id="occupation" name="occupation" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Add Customer</button>
+            </form>
+            <hr>
+            <h4 class="text-center">Customer List</h4>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date Due</th>
+                            <th>Description</th>
+                            <th>House Number</th>
+                            <th>Name</th>
+                            <th>Plot Number</th>
+                            <th>Phone Number</th>
+                            <th>Meter Number</th>
+                            <th>Maintenance</th>
+                            <th>Service Charge</th>
+                            <th>Form of Identification</th>
+                            <th>Occupation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers %}
+                        <tr>
+                            <td>{{ customer.date_due.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ customer.description }}</td>
+                            <td>{{ customer.house_number }}</td>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.plot_number }}</td>
+                            <td>{{ customer.phone_number }}</td>
+                            <td>{{ customer.meter_number }}</td>
+                            <td>{{ customer.maintainance }}</td>
+                            <td>{{ customer.service_charge }}</td>
+                            <td>{{ customer.form_of_identification }}</td>
+                            <td>{{ customer.occupation }}</td>
+                            <td>
+                                <form method="POST" action="/delete">
+                                    <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <footer>
-        <p>&copy; 2024 Rental</p>
-    </footer>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
