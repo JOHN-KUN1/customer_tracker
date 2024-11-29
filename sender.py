@@ -41,7 +41,6 @@ def rent_due_checker():
         for customer in customers:
             if now >= customer.date_due + timedelta(minutes=1):
                 send_rent_due_email(customer)
-                print("sent")
                 db.session.delete(customer)
                 db.session.commit()
 
