@@ -16,8 +16,8 @@ db = SQLAlchemy(app)
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'kun405222@gmail.com'
-app.config['MAIL_PASSWORD'] = 'hezx ohvj lhry topt'
+app.config['MAIL_USERNAME'] = 'olivehousing2@gmail.com'
+app.config['MAIL_PASSWORD'] = 'rzff cjry rivu doyq'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 
@@ -37,7 +37,7 @@ class Customer(db.Model):
     service_charge = db.Column(db.String(200), nullable=False) 
     form_of_identification = db.Column(db.String(200), nullable=False) 
     occupation = db.Column(db.String(100), nullable=False)
- 
+
 with app.app_context():
     db.create_all()
 
@@ -70,25 +70,6 @@ def delete_customer():
     db.session.commit()
     return redirect(url_for('index'))
 
-def send_rent_due_email(customer):
-    msg = Message('Rent Due Reminder', sender='kun405222@gmail.com', recipients=['elitejhn5@gmail.com'])
-    msg.body = f"Rent for {customer.name} is due."
-    mail.send(msg)
-
-def rent_due_checker():
-    with app.app_context():
-        while True:
-            now = datetime.now()
-            customers = Customer.query.all()
-            for customer in customers:
-                if now >= customer.entry_date + timedelta(minutes=1):
-                    send_rent_due_email(customer)
-                    print("sent")
-                    db.session.delete(customer)
-                    db.session.commit()
-            multiprocessing.Event().wait(60)  # Check once every minute
-
 
 if __name__ == '__main__':
-    multiprocessing.Process(target=rent_due_checker).start()
     app.run(debug=True)
