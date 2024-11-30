@@ -1,33 +1,21 @@
 from flask_mail import Mail, Message
-from app import app
+from flask_sqlalchemy import SQLAlchemy
+from app import app,db,Customer
+from datetime import datetime, timedelta
 
 mail = Mail(app)
 
-# Define Customer Model
-class Customer(db.Model):
-    id = db.Column(db.Integer, primary_key=True) 
-    date_due = db.Column(db.DateTime, nullable=False)
-    description = db.Column(db.String(200), nullable=False) 
-    house_number = db.Column(db.String(50), nullable=False) 
-    name = db.Column(db.String(100), nullable=False) 
-    plot_number = db.Column(db.String(50), nullable=False) 
-    phone_number = db.Column(db.String(50), nullable=False) 
-    meter_number = db.Column(db.String(50), nullable=False) 
-    maintainance = db.Column(db.String(200), nullable=False) 
-    service_charge = db.Column(db.String(200), nullable=False) 
-    form_of_identification = db.Column(db.String(200), nullable=False) 
-    occupation = db.Column(db.String(100), nullable=False)
 
 with app.app_context():
     db.create_all()
 
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
+app.config['MAIL_PORT'] = 25
 app.config['MAIL_USERNAME'] = 'olivehousing2@gmail.com'
 app.config['MAIL_PASSWORD'] = 'rzff cjry rivu doyq'
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
 
 def send_rent_due_email(customer):
     msg = Message('Rent Due Reminder', sender='olivehousing2@gmail.com', recipients=['elitejhn5@gmail.com'])
@@ -39,11 +27,12 @@ def rent_due_checker():
         now = datetime.now()
         customers = Customer.query.all()
         for customer in customers:
-            if now >= customer.date_due + timedelta(minutes=1):
+            if now >= customer.date_due:
+                print(f"now: {now}, customerDate : {customer.date_due + timedelta(minutes=1)}")
                 send_rent_due_email(customer)
+                print("sent")
                 db.session.delete(customer)
                 db.session.commit()
-
 
 if __name__ == '__main__': 
     rent_due_checker()
